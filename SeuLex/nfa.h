@@ -122,7 +122,7 @@ private:
 
     int id = 0;
     std::set<State *> haveTravel;
-    std::map<State *, int> state2id;
+    std::map<State *, int> stateToid;
 };
 
 /*

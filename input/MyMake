@@ -1,8 +1,0 @@
-
-
-all:
-	gcc out.c -o out
-	sh -c "./out main.c"
-
-claen:
-	rm -rf out

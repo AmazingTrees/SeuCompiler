@@ -1,14 +1,3 @@
-/*
- *=================================================================================================
- *    Filename:state.h
- *
- *    Version: 1.0
- *    Created on: May 17, 2018
- *
- *    Author: Kan xinyu
- *=================================================================================================
- */
-
 #ifndef STATE_H_
 #define STATE_H_
 
@@ -58,7 +47,7 @@ public:
     std::set<State*> coreState;     // 当前状态所代表的NFA状态中的核心状态
     std::set<State*> allState;      // 记录所有可能状态
     bool hasTravel = false;         // 构建DFA时, 表示该状态是否已经被遍历
-    bool isEnd = false;             // 是否为接受节点
+    bool isEnd = false;             // 是否为结束节点
     std::string endFunc;            // 结束状态中所对应的执行函数
 
     // 添加DFA的路径

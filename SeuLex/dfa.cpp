@@ -1,7 +1,7 @@
 #include "dfa.h"
 
 
-DState* N2DFA::pickupFromList(std::list<DState*> *pDsList) {
+DState* NToDFA::pickupFromList(std::list<DState*> *pDsList) {
     for(auto pList = pDsList->begin(); pList != pDsList->end(); pList++) {
         DState* tmpDs = (*pList);
         if (tmpDs->hasTravel == false) {
@@ -11,7 +11,7 @@ DState* N2DFA::pickupFromList(std::list<DState*> *pDsList) {
     return NULL;
 }
 
-DState* N2DFA::alreadyHave(std::list<DState *> *pDsList, DState* ds) {
+DState* NToDFA::alreadyHave(std::list<DState *> *pDsList, DState* ds) {
 
     for(auto pList = pDsList->begin(); pList != pDsList->end(); pList++) {
         DState* tmpDs = (*pList);
@@ -23,7 +23,7 @@ DState* N2DFA::alreadyHave(std::list<DState *> *pDsList, DState* ds) {
     return NULL;
 }
 
-void N2DFA::free(DState *ds) {
+void NToDFA::free(DState *ds) {
     if (ds == NULL || haveTravel.find(ds) != haveTravel.end()) {
         return ;
     }
@@ -39,7 +39,7 @@ void N2DFA::free(DState *ds) {
 }
 
 
-void N2DFA::showDFA(DState *ds) {
+void NToDFA::showDFA(DState *ds) {
 
     if (ds == NULL) {
         return;
@@ -48,8 +48,8 @@ void N2DFA::showDFA(DState *ds) {
     if (haveTravel.find(ds) != haveTravel.end()) {
         return;
     }
-    if (state2id.find(ds) == state2id.end()) {
-        state2id.insert(std::make_pair(ds, id));
+    if (stateToid.find(ds) == stateToid.end()) {
+        stateToid.insert(std::make_pair(ds, id));
         id ++;
     }
 
@@ -58,25 +58,25 @@ void N2DFA::showDFA(DState *ds) {
     for (auto pDs = ds->out.begin(); pDs != ds->out.end(); pDs++) {
         std::pair<DState* const, int > tmpDsPair = *pDs;
         DState* tmpDs = tmpDsPair.first;
-        if (state2id.find(tmpDs) == state2id.end()) {
-            state2id.insert(std::make_pair(tmpDs, id));
+        if (stateToid.find(tmpDs) == stateToid.end()) {
+            stateToid.insert(std::make_pair(tmpDs, id));
             id ++;
         }
 
         if (tmpDs->isEnd) {
-            printf("%d -> %c -> [%d]\n", state2id[ds], tmpDsPair.second, state2id[tmpDs]);
+            printf("%d -> %c -> [%d]\n", stateToid[ds], tmpDsPair.second, stateToid[tmpDs]);
             if (!tmpDs->endFunc.empty()) {
                 printf("Endfunc is %s\n", tmpDs->endFunc.c_str()) ;
             }
         } else {
-            printf("%d -> %c -> %d\n", state2id[ds], tmpDsPair.second, state2id[tmpDs]);
+            printf("%d -> %c -> %d\n", stateToid[ds], tmpDsPair.second, stateToid[tmpDs]);
         }
 
         showDFA(tmpDs);
     }
 }
 
-DState* N2DFA::nfa2dfa(NFA *nfa) {
+DState* NToDFA::nfaTodfa(NFA *nfa) {
 
     State *start = nfa->getStart();
 
@@ -95,8 +95,8 @@ DState* N2DFA::nfa2dfa(NFA *nfa) {
     ds->getAllState();
 
     dsList.push_back(ds);
-    this->dState2id.insert(std::make_pair(ds, this->dsCnt));
-    this->id2dState.insert(std::make_pair(this->dsCnt, ds));
+    this->dStateToid.insert(std::make_pair(ds, this->dsCnt));
+    this->idTodState.insert(std::make_pair(this->dsCnt, ds));
     this->dsCnt ++;
 
     bool isModify = true;
@@ -140,8 +140,8 @@ DState* N2DFA::nfa2dfa(NFA *nfa) {
                 tmpDs->getAllState();
                 pDs->addDState(tmpDs, *pChar);
                 dsList.push_back(tmpDs);
-                this->dState2id.insert(std::make_pair(tmpDs, this->dsCnt));
-                this->id2dState.insert(std::make_pair(this->dsCnt, tmpDs));
+                this->dStateToid.insert(std::make_pair(tmpDs, this->dsCnt));
+                this->idTodState.insert(std::make_pair(this->dsCnt, tmpDs));
                 this->dsCnt ++;
             }
         }

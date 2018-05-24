@@ -1,4 +1,3 @@
-
 #include "fstream"
 #include "lex.h"
 #include "nfa.h"
@@ -103,8 +102,8 @@ void Lex::getFunc(std::string str, int line) {
 
 
     funcMap.insert(std::make_pair(left, right));
-    type2ch.insert(std::make_pair(left, ch));
-    ch2func.insert(std::make_pair(ch, right));
+    typeToch.insert(std::make_pair(left, ch));
+    chTofunc.insert(std::make_pair(ch, right));
 
     ch ++;
 
@@ -133,8 +132,8 @@ void Lex::getRegular(std::string str, int line) {
             while (re.at(i) != '}') {i++;}
 
             string atom = re.substr(start, i - start);
-            if (type2ch.find(atom) != type2ch.end()) {
-                re_s[it++] = type2ch.at(atom);
+            if (typeToch.find(atom) != typeToch.end()) {
+                re_s[it++] = typeToch.at(atom);
             }  else {
                 printError(line, "error find " + atom);
             }
@@ -145,9 +144,9 @@ void Lex::getRegular(std::string str, int line) {
             break;
         }
     }
-    ReToNFA *pre2Nfa = new ReToNFA(re_s, func);
-    pre2Nfa->strToNFA();
-    re2NFAList.push_back(pre2Nfa);
+    ReToNFA *preToNfa = new ReToNFA(re_s, func);
+    preToNfa->strToNFA();
+    reToNFAList.push_back(preToNfa);
 }
 
 std::pair<string, string> Lex::getReAndFunc(string str) {
@@ -223,18 +222,18 @@ void Lex::outCodeMid()
     o<<"        switch(SYLEX_STATE) {"<<endl;
 
     int state = 0;
-    DState *start = pN2DFA->dstart;
+    DState *start = pNToDFA->dstart;
     std::set<DState*> haveTravel;
-    std::map<DState*, int> state2id= pN2DFA->dState2id;
-    std::map<int, DState*> id2state = pN2DFA->id2dState;
+    std::map<DState*, int> stateToid= pNToDFA->dStateToid;
+    std::map<int, DState*> idTostate = pNToDFA->idTodState;
 
 
-    int dfaNum = pN2DFA->dsCnt;
+    int dfaNum = pNToDFA->dsCnt;
 
 
     for (int i = 0; i < dfaNum; ++i) {
 
-        DState* ds = id2state.at(i);
+        DState* ds = idTostate.at(i);
         o << "        case " << i << ":"  << endl;
         o << "        {" << endl;
         o << "            ch = *str++;" << endl;
@@ -248,14 +247,14 @@ void Lex::outCodeMid()
             hasPath = true;
             DState *s = path->first;
             int Key = path->second;
-            int toId = state2id.at(s);
+            int toId = stateToid.at(s);
 
             bool isFun = false;
             string chk_s;
 
-            if (ch2func.find(Key) != ch2func.end()) {
+            if (chTofunc.find(Key) != chTofunc.end()) {
                 isFun = true;
-                chk_s = ch2func.at(Key);
+                chk_s = chTofunc.at(Key);
                 chk_s += "(ch)){";
             } else {
                 char p = Key;
@@ -338,7 +337,7 @@ void test()
     Lex lex("../input/require.l", "../input/out.c");
     lex.scaner();
     lex.dfaMerge();
-    lex.nfa2DFA();
+    lex.nfaToDFA();
     lex.output();
 }
 

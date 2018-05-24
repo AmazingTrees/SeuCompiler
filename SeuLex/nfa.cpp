@@ -261,8 +261,6 @@ State *ReToNFA::postTonfa(char *postfix)
 
     if(e.end->c == Match)
     {
-        //e.end->out1 = end;
-        //printf ( "already matched\n" );
         e.end->endFunc = this->func;
     }
     else
@@ -292,9 +290,9 @@ void ReToNFA::showNFA(State *start)
         return;
     }
 
-    if(state2id.find(start) == state2id.end())
+    if(stateToid.find(start) == stateToid.end())
     {
-        state2id.insert(std::make_pair(start, id));
+        stateToid.insert(std::make_pair(start, id));
         id ++;
     }
 
@@ -303,17 +301,17 @@ void ReToNFA::showNFA(State *start)
     if(start->out != NULL)
     {
         if (haveTravel.find(start->out) == haveTravel.end()) {
-            state2id.insert(std::make_pair(start->out, id));
+            stateToid.insert(std::make_pair(start->out, id));
             id++;
         }
         if (start->c < 256) {
             printf("%d -> %c -> %d\n",
-                   state2id.at(start), start->c, state2id.at(start->out));
+                   stateToid.at(start), start->c, stateToid.at(start->out));
         } else {
             if (start->out->c == Match) {
-                printf("%d -> [] -> [%d]\n", state2id.at(start), state2id.at(start->out));
+                printf("%d -> [] -> [%d]\n", stateToid.at(start), stateToid.at(start->out));
             } else {
-                printf("%d -> [] -> %d\n", state2id.at(start), state2id.at(start->out));
+                printf("%d -> [] -> %d\n", stateToid.at(start), stateToid.at(start->out));
             }
         }
         showNFA(start->out);
@@ -322,10 +320,10 @@ void ReToNFA::showNFA(State *start)
     if(start->out1 != NULL)
     {
         if (haveTravel.find(start->out1) == haveTravel.end()) {
-            state2id.insert(std::make_pair(start->out1, id));
+            stateToid.insert(std::make_pair(start->out1, id));
             id++;
         }
-        printf("%d -> [] -> %d\n", state2id.at(start), state2id.at(start->out1));
+        printf("%d -> [] -> %d\n", stateToid.at(start), stateToid.at(start->out1));
         showNFA(start->out1);
     }
 }

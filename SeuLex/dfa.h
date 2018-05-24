@@ -6,7 +6,7 @@
 #include "state.h"
 #include "nfa.h"
 
-class N2DFA
+class NToDFA
 {
 public:
     DState* pickupFromList(std::list<DState*> *pDsList);// 遍历所有状态并查找尚未计算的DState
@@ -14,24 +14,24 @@ public:
     DState *dstart;
     NFA *nfa;
     int dsCnt = 0;
-    std::map<DState*, int> dState2id;
-    std::map<int, DState*> id2dState;
+    std::map<DState*, int> dStateToid;
+    std::map<int, DState*> idTodState;
 
-    N2DFA(NFA *nfa) {
+    NToDFA(NFA *nfa) {
         this->nfa = nfa;
               }
 
-    ~N2DFA() {
+    ~NToDFA() {
         this->haveTravel.clear();
         free(this->dstart);
               }
 
     std::set<DState*> haveTravel;
-    std::map<DState*, int> state2id;
+    std::map<DState*, int> stateToid;
     int id = 0;
 
-    void nfa2dfa() {
-        this->nfa2dfa(nfa);
+    void nfaTodfa() {
+        this->nfaTodfa(nfa);
               }
 
     void printDFA() {
@@ -40,7 +40,7 @@ public:
              }
 
 private:
-    DState* nfa2dfa(NFA *nfa);
+    DState* nfaTodfa(NFA *nfa);
     void showDFA(DState *ds);
     void free(DState *ds);//递归释放资源, 由析构函数调用
 

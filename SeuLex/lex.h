@@ -28,8 +28,8 @@ public:
     std::ostream *out = NULL;
     std::istream *in = NULL;
 
-    std::vector<ReToNFA*> re2NFAList;
-    N2DFA* pN2DFA = NULL;
+    std::vector<ReToNFA*> reToNFAList;
+    NToDFA* pNToDFA = NULL;
 
     Lex (string _lexFile) {
 
@@ -62,12 +62,12 @@ public:
 
 
     ~Lex() {
-        for (auto iter = re2NFAList.begin(); iter != re2NFAList.end(); ++iter) {
+        for (auto iter = reToNFAList.begin(); iter != reToNFAList.end(); ++iter) {
             delete *iter;
         }
-        re2NFAList.clear();
-        if (pN2DFA != NULL) {
-            delete pN2DFA;
+        reToNFAList.clear();
+        if (pNToDFA != NULL) {
+            delete pNToDFA;
         }
 
         ((std::ifstream*)in)->close();
@@ -86,10 +86,10 @@ public:
     std::map<string, string> funcMap;
 
     // 记录自定义的类型的符号, 以便进行转换 digit->a
-    std::map<string, char> type2ch;
+    std::map<string, char> typeToch;
 
     // 此处记录符号与判断函数对应 a -> isDigit
-    std::map<char, string> ch2func;
+    std::map<char, string> chTofunc;
 
     // 辅助函数: 记录不同的判断函数对应的字符串,
 
@@ -107,18 +107,18 @@ public:
 
 
     void dfaMerge() {
-        for (int i = 0; i < re2NFAList.size(); ++i) {
-            ReToNFA* nfa = re2NFAList.at(i);
-            nfa2List.merge(nfa);
+        for (int i = 0; i < reToNFAList.size(); ++i) {
+            ReToNFA* nfa = reToNFAList.at(i);
+            nfaToList.merge(nfa);
         }
     }
 
 
-    NFAToLIST nfa2List;
+    NFAToLIST nfaToList;
 
-    void nfa2DFA() {
-        pN2DFA = new N2DFA(&nfa2List);
-        pN2DFA->nfa2dfa();
+    void nfaToDFA() {
+        pNToDFA = new NToDFA(&nfaToList);
+        pNToDFA->nfaTodfa();
     }
 
     void printWarnning(int line, string str) {
