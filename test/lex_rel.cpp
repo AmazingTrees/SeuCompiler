@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
         printHelp();
     }
 
-    Lex lex(argv[1], "lex.yy.c");
+    Lex lex(argv[1], "lex.c");
     lex.scaner();
     lex.dfaMerge();
     lex.nfaToDFA();
