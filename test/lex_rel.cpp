@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     Lex lex(argv[1], "lex.yy.c");
     lex.scaner();
     lex.dfaMerge();
-    lex.nfa2DFA();
+    lex.nfaToDFA();
     lex.output();
 
     return 0;
