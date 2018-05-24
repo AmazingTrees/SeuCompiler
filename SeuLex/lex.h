@@ -28,7 +28,7 @@ public:
     std::ostream *out = NULL;
     std::istream *in = NULL;
 
-    std::vector<Re2NFA*> re2NFAList;
+    std::vector<ReToNFA*> re2NFAList;
     N2DFA* pN2DFA = NULL;
 
     Lex (string _lexFile) {
@@ -108,13 +108,13 @@ public:
 
     void dfaMerge() {
         for (int i = 0; i < re2NFAList.size(); ++i) {
-            Re2NFA* nfa = re2NFAList.at(i);
+            ReToNFA* nfa = re2NFAList.at(i);
             nfa2List.merge(nfa);
         }
     }
 
 
-    NFA2LIST nfa2List;
+    NFAToLIST nfa2List;
 
     void nfa2DFA() {
         pN2DFA = new N2DFA(&nfa2List);
@@ -137,7 +137,7 @@ public:
     void outCodeBottom();
 
     void output() {
-
+        outCodeTop ();
         outCodeMid();
         outCodeBottom();
     }

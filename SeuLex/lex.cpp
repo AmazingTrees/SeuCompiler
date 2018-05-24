@@ -145,7 +145,7 @@ void Lex::getRegular(std::string str, int line) {
             break;
         }
     }
-    Re2NFA *pre2Nfa = new Re2NFA(re_s, func);
+    ReToNFA *pre2Nfa = new ReToNFA(re_s, func);
     pre2Nfa->strToNFA();
     re2NFAList.push_back(pre2Nfa);
 }
